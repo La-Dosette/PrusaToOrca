@@ -11,7 +11,9 @@ bug_reports/
 # PyInstaller build artifacts
 dist/
 build/
+# PrusaToOrca.spec is the published build recipe and IS tracked.
 *.spec
+!PrusaToOrca.spec
 __pycache__/
 *.pyc
 *.pyo
@@ -25,3 +27,12 @@ test_output_real/
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated at build time from version.py
+version_info.txt
+
+# Local release output (published via GitHub Releases instead)
+release/
+# Copied from the repository root by the Pages workflow.
+web/convert.py
+.claude/

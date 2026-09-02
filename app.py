@@ -23,19 +23,15 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 from convert import ConversionLog, convert_ini_to_orca
+from version import __version__
 
-APP_VERSION = "0.2.0"
+APP_VERSION = __version__
 APP_NAME = "PrusaToOrca"
 SETTINGS_FILE = "settings.json"
 CUSTOM_MAPPINGS_FILE = "custom_mappings.json"
-GITHUB_RELEASES_API = (
-    "https://api.github.com/repos/"
-    "La-Dosette/PrusaToOrca-PrusaSlicer-to-OrcaSlicer-Profile-Converter-.exe-/releases/latest"
-)
-GITHUB_RELEASES_URL = (
-    "https://github.com/"
-    "La-Dosette/PrusaToOrca-PrusaSlicer-to-OrcaSlicer-Profile-Converter-.exe-/releases"
-)
+GITHUB_REPO = "La-Dosette/PrusaToOrca"
+GITHUB_RELEASES_API = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
+GITHUB_RELEASES_URL = f"https://github.com/{GITHUB_REPO}/releases"
 
 try:
     from tkinterdnd2 import DND_FILES, TkinterDnD
