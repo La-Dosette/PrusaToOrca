@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PrusaToOrca Web — PrusaSlicer to OrcaSlicer converter</title>
+<meta name="description" content="Convert PrusaSlicer .ini config bundles to OrcaSlicer .orca_printer bundles, entirely in your browser. No upload, no install.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <img src="logo.png" alt="" width="32" height="32">
+      <span>PrusaToOrca <em>Web</em></span>
+    </div>
+    <a class="ghlink" href="https://github.com/La-Dosette/PrusaToOrca" target="_blank" rel="noopener">Source on GitHub</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <h1>PrusaSlicer&nbsp;&rarr;&nbsp;OrcaSlicer,<br>in your browser.</h1>
+
+  <p class="lede">
+    Drop a PrusaSlicer config bundle and get back an <code>.orca_printer</code> file
+    ready to import. Nothing to install, nothing to trust me about.
+  </p>
+
+  <p class="privacy" id="privacy">
+    <strong>Your files never leave your computer.</strong>
+    This page runs <a href="https://github.com/La-Dosette/PrusaToOrca/blob/main/convert.py" target="_blank" rel="noopener"><code>convert.py</code></a>
+    &mdash; the exact same converter the desktop app uses &mdash; compiled to WebAssembly and executed
+    locally. There is no server, no upload and no analytics. Open your browser's network
+    tab and check.
+  </p>
+
+  <section id="dropzone" class="dropzone" tabindex="0" role="button"
+           aria-label="Choose or drop a PrusaSlicer .ini config bundle">
+    <input type="file" id="file" accept=".ini" hidden>
+    <div class="dz-icon" aria-hidden="true">&#8595;</div>
+    <p class="dz-main">Drop your <code>.ini</code> here</p>
+    <p class="dz-sub">or click to choose a file</p>
+  </section>
+
+  <div class="options" id="options">
+    <label class="opt">
+      <input type="checkbox" id="strict" checked>
+      <span>
+        <strong>Restrict to this printer</strong>
+        <em>Filament and process profiles are only offered for the printer in this bundle. Uncheck to make them available everywhere.</em>
+      </span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" id="prefix" checked>
+      <span>
+        <strong>Prefix profile names</strong>
+        <em>Names imported profiles <code>PrusaToOrca - …</code> so they never overwrite profiles you already have.</em>
+      </span>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button id="convert" class="btn primary" disabled>Convert</button>
+    <span class="status" id="status" role="status" aria-live="polite">Loading converter…</span>
+  </div>
+
+  <section id="result" class="result" hidden></section>
+
+  <section class="upsell">
+    <h2>This page is the lite version</h2>
+    <p>
+      It does the full conversion, with the same engine and the same output quality.
+      The desktop app adds the things that need to touch your disk:
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Web</th><th>Desktop</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Full bundle conversion</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><td>Conversion report &amp; warnings</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><td>Custom key mappings</td><td class="no">&mdash;</td><td class="yes">Yes</td></tr>
+          <tr><td>Guided import assistant</td><td class="no">&mdash;</td><td class="yes">Yes</td></tr>
+          <tr><td>Automatic profile backups</td><td class="no">&mdash;</td><td class="yes">Yes</td></tr>
+          <tr><td>Conversion history</td><td class="no">&mdash;</td><td class="yes">Yes</td></tr>
+          <tr><td>Anonymised bug reports</td><td class="no">&mdash;</td><td class="yes">Yes</td></tr>
+          <tr><td>Multilingual interface</td><td class="no">&mdash;</td><td class="yes">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cta-row">
+      <a class="btn" href="https://github.com/La-Dosette/PrusaToOrca/releases/latest" target="_blank" rel="noopener">Get the desktop app</a>
+      <a class="quiet" href="https://github.com/La-Dosette/PrusaToOrca/blob/main/SECURITY.md" target="_blank" rel="noopener">How to verify the download</a>
+    </p>
+  </section>
+
+</main>
+
+<footer class="wrap foot">
+  <p>
+    PrusaToOrca is free software under the
+    <a href="https://github.com/La-Dosette/PrusaToOrca/blob/main/LICENSE" target="_blank" rel="noopener">AGPL-3.0</a>.
+    Not affiliated with Prusa Research or the OrcaSlicer project.
+  </p>
+  <p class="tiny">Always back up your OrcaSlicer profiles before importing anything.</p>
+</footer>
+
+<script src="app.js" type="module"></script>
+</body>
+</html>

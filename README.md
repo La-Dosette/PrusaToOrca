@@ -97,6 +97,19 @@ PrusaToOrca includes several report views to help understand what was converted.
 
 ---
 
+## &#127760; Try it without downloading anything
+
+**[la-dosette.github.io/PrusaToOrca](https://la-dosette.github.io/PrusaToOrca/)**
+
+The web version does the full conversion in your browser, with no install and no
+upload. It runs this repository's own [`convert.py`](convert.py) compiled to
+WebAssembly, so it is not a separate implementation that could drift &mdash; it is
+the same converter, and it produces byte-identical output. The desktop app adds
+custom key mappings, the guided import assistant, backups, history and the
+multilingual interface. See [web/README.md](web/README.md).
+
+---
+
 ## &#128230; Download
 
 Download the latest Windows executable from:

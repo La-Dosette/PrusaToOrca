@@ -1,0 +1,44 @@
+name: Deploy web version
+
+# Publishes web/ to GitHub Pages. convert.py is copied in from the repository
+# root rather than duplicated, so the web version always runs the same
+# converter as the desktop app and cannot drift from it.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - "convert.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage the converter
+        run: cp convert.py web/convert.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -33,3 +33,6 @@ version_info.txt
 
 # Local release output (published via GitHub Releases instead)
 release/
+# Copied from the repository root by the Pages workflow.
+web/convert.py
+.claude/
