@@ -23,8 +23,9 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 from convert import ConversionLog, convert_ini_to_orca
+from version import __version__
 
-APP_VERSION = "0.2.0"
+APP_VERSION = __version__
 APP_NAME = "PrusaToOrca"
 SETTINGS_FILE = "settings.json"
 CUSTOM_MAPPINGS_FILE = "custom_mappings.json"

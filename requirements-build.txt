@@ -1,0 +1,2 @@
+# Build-time dependencies, pinned so a release can be reproduced exactly.
+pyinstaller==6.19.0

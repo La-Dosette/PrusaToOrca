@@ -1,0 +1,67 @@
+name: Release
+
+# Publishes a Windows build from a tag. Everything users download is produced
+# here, on a clean GitHub-hosted runner, never on a maintainer's machine, and
+# is accompanied by a SHA-256 checksum and a signed build provenance
+# attestation. Anyone can verify a download with:
+#
+#   gh attestation verify PrusaToOrca-vX.Y.Z-windows.zip --repo <owner>/<repo>
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-build.txt
+
+      - name: Check the tag matches version.py
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}".TrimStart("v")
+          $version = python -c "from version import __version__; print(__version__)"
+          if ($tag -ne $version) {
+            throw "Tag $tag does not match version.py ($version). Update version.py and retag."
+          }
+          Write-Host "Tag and version.py agree on $version"
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build
+        shell: pwsh
+        run: .\build_exe.ps1
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: release/*.zip
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.zip
+            release/SHA256SUMS.txt
+          generate_release_notes: true
+          fail_on_unmatched_files: true

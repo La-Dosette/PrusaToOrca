@@ -106,10 +106,40 @@ Download the latest Windows executable from:
 Look for:
 
 ```text
-PrusaToOrca-v0.2.0.exe
+PrusaToOrca-v1.1.0-windows.zip
 ```
 
-No Python installation is required when using the `.exe`.
+Unzip it anywhere and run `PrusaToOrca.exe`. No Python installation is required.
+
+---
+
+## &#128274; Is this safe?
+
+Fair question for a downloaded `.exe`. Short answer: the source is right here
+under AGPL-3.0, and you do not have to take my word for any of it.
+
+**Releases are built by GitHub Actions, not on my machine.** Every archive ships
+with a SHA-256 checksum and a signed build provenance attestation, so you can
+prove the file you downloaded was produced by
+[this workflow](.github/workflows/release.yml) from this source:
+
+```bash
+gh attestation verify PrusaToOrca-v1.1.0-windows.zip --repo La-Dosette/PrusaToOrca
+```
+
+**About antivirus warnings.** Unsigned PyInstaller applications get flagged by
+machine-learning antivirus engines, and v1.0.0 was: 6 of 70 engines on
+VirusTotal, all generic ML verdicts, no named malware family, and no
+signature-based engine detecting anything. The cause was the onefile packaging,
+which self-extracts to `%TEMP%` and looks exactly like a dropper. v1.1.0 drops
+onefile and UPX and embeds proper version metadata.
+
+**What it does on your machine:** reads the `.ini` files you pick, writes the
+bundle where you tell it to. One network request, only when you click "Check for
+updates", to read the latest release tag from `api.github.com`. No telemetry, no
+uploads, no background activity.
+
+The full explanation is in [SECURITY.md](SECURITY.md).
 
 ---
 
@@ -178,13 +208,22 @@ $env:PYTHON="C:\Path\To\python.exe"
 .\build_exe.ps1
 ```
 
-Or run PyInstaller manually:
+This generates the version resource, runs PyInstaller against
+[PrusaToOrca.spec](PrusaToOrca.spec), zips the result into `release/` and writes
+a `SHA256SUMS.txt` next to it.
+
+Or invoke PyInstaller directly:
 
 ```bash
-pyinstaller --onefile --windowed --name "PrusaToOrca" --icon "logo.ico" --add-data "assets;assets" --add-data "logo.png;." --add-data "logo.ico;." app.py
+python tools/make_version_info.py
+pyinstaller --noconfirm --clean PrusaToOrca.spec
 ```
 
-The executable will be created in `dist/`.
+The application folder is created in `dist/PrusaToOrca/`.
+
+Do not pass `--onefile` or enable UPX. The `.spec` deliberately avoids both:
+they are what caused the antivirus false positives on v1.0.0, as explained in
+[SECURITY.md](SECURITY.md).
 
 ---
 
