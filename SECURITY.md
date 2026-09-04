@@ -39,14 +39,14 @@ Starting with v1.1.0:
 Check the checksum against `SHA256SUMS.txt` in the release:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\PrusaToOrca-v1.1.0-windows.zip
+Get-FileHash -Algorithm SHA256 .\PrusaToOrca-v1.1.1-windows.zip
 ```
 
 Or verify cryptographically that the archive was built by this repository's
 release workflow, from this repository's source:
 
 ```bash
-gh attestation verify PrusaToOrca-v1.1.0-windows.zip --repo La-Dosette/PrusaToOrca
+gh attestation verify PrusaToOrca-v1.1.1-windows.zip --repo La-Dosette/PrusaToOrca
 ```
 
 The attestation associates the archive with a specific commit and release

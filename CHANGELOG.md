@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.1.1
+
+Windows Defender blocked v1.1.0 as `Trojan:Win32/Wacatac.C!ml` — at download,
+inside the archive, and on extraction — so the app could not be installed on a
+default Windows setup. Same false positive as v1.0.0, same root cause: the
+executable still carried an appended archive.
+
+Dropping onefile in v1.1.0 removed the self-extracting payload, but PyInstaller
+still appends its module archive to the launcher, so the executable kept the
+overlay that the heuristic keys on.
+
+- Build with `noarchive`, which stores Python modules as individual files in
+  `_internal` instead of appending them to the executable. The launcher drops
+  from 2.2 MB to 493 KB and carries no overlay.
+
+Verified against Windows Defender directly: the v1.1.0 binary is quarantined on
+write, the v1.1.1 binary scans clean and the application starts normally.
+
+Conversion behaviour is unchanged.
+
 ## v1.1.0
 
 Packaging and distribution release. No conversion behaviour changes: profiles
