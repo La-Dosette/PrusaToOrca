@@ -32,8 +32,8 @@ engine detected anything. The cause was the packaging, not the code.
 
 - Added a browser version at https://la-dosette.github.io/PrusaToOrca/ that
   converts a bundle with no install and no upload. It runs the project's own
-  `convert.py` compiled to WebAssembly, so it cannot drift from the desktop app,
-  and its output is byte-identical.
+  `convert.py` through Pyodide instead of maintaining a second converter.
+  Browser/desktop parity tests check that its output stays byte-identical.
 - Desktop-only features remain: custom key mappings, the guided import
   assistant, backups, conversion history, bug reports and the multilingual
   interface.

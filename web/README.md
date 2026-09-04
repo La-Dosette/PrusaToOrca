@@ -4,15 +4,13 @@ The browser version. It runs the project's own [`convert.py`](../convert.py)
 through [Pyodide](https://pyodide.org/) instead of reimplementing the conversion
 in JavaScript.
 
-That choice is deliberate. A second implementation would be free to drift from
-the desktop app, and a converter that quietly produces different profiles
-depending on where you ran it is worse than having no web version at all. This
-way there is one converter, and the web page is a front end for it.
+This keeps one conversion engine for the browser and desktop applications. The
+web page is a front end for that engine, and parity tests check their output.
 
 The conversion runs entirely on the visitor's machine. There is no backend, and
 no file is ever uploaded.
 
-## What it deliberately leaves out
+## What the desktop app adds
 
 Full bundle conversion and the conversion report are here. Custom key mappings,
 the guided import assistant, automatic profile backups, conversion history,

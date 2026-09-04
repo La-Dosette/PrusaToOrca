@@ -49,9 +49,9 @@ release workflow, from this repository's source:
 gh attestation verify PrusaToOrca-v1.1.0-windows.zip --repo La-Dosette/PrusaToOrca
 ```
 
-The second check is the strong one. It proves the binary came from a specific
-commit through a specific workflow, and it cannot be forged by someone
-redistributing a modified build.
+The attestation associates the archive with a specific commit and release
+workflow. Verify it together with the published checksum before running the
+download.
 
 ## What the application does on your machine
 
@@ -68,5 +68,5 @@ you can verify all of this yourself.
 
 ## Reporting a vulnerability
 
-Open a [security advisory](../../security/advisories/new), or an issue if the
-problem is not sensitive.
+Open a [security advisory](https://github.com/La-Dosette/PrusaToOrca/security/advisories/new),
+or an issue if the problem is not sensitive.
