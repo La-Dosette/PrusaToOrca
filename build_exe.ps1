@@ -29,7 +29,7 @@ if (-not (Test-Path (Join-Path $appDir "PrusaToOrca.exe"))) {
 $releaseDir = Join-Path $root "release"
 New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
 
-foreach ($doc in @("CHANGELOG.md", "PATCH_NOTES.md", "LICENSE", "README.md")) {
+foreach ($doc in @("CHANGELOG.md", "LICENSE", "PRIVACY.md", "README.md", "SECURITY.md")) {
   $src = Join-Path $root $doc
   if (Test-Path $src) { Copy-Item -Force $src (Join-Path $appDir $doc) }
 }
