@@ -34,19 +34,38 @@ Starting with v1.1.0:
 - **Every release carries a signed build provenance attestation** and a
   SHA-256 checksum.
 
+That fixed most of it, but not all: v1.1.1 was still detected as
+`Program:Win32/Wacapew.A!ml`, and Windows Defender kept blocking the download
+outright.
+
+The last trigger turned out not to be our packaging at all. PyInstaller ships a
+prebuilt bootloader — the small launcher every PyInstaller application starts
+from. It is byte-identical across all of them, a great many malware samples are
+built with PyInstaller too, and so that launcher is in antivirus signature sets
+and ML training data. Any application using it inherits the detection, whatever
+it actually does.
+
+Since v1.1.2, [tools/build_bootloader.ps1](tools/build_bootloader.ps1) compiles
+the bootloader from PyInstaller's source distribution and the release workflow
+runs it before packaging, so published builds never ship the stock launcher.
+
+Measured directly against Windows Defender on signature version 1.459.59.0,
+minutes apart: the v1.1.1 binary reports `Program:Win32/Wacapew.A!ml`, and a
+binary built with a self-compiled bootloader reports no threats.
+
 ## Verifying a download
 
 Check the checksum against `SHA256SUMS.txt` in the release:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\PrusaToOrca-v1.1.1-windows.zip
+Get-FileHash -Algorithm SHA256 .\PrusaToOrca-v1.1.2-windows.zip
 ```
 
 Or verify cryptographically that the archive was built by this repository's
 release workflow, from this repository's source:
 
 ```bash
-gh attestation verify PrusaToOrca-v1.1.1-windows.zip --repo La-Dosette/PrusaToOrca
+gh attestation verify PrusaToOrca-v1.1.2-windows.zip --repo La-Dosette/PrusaToOrca
 ```
 
 The attestation associates the archive with a specific commit and release

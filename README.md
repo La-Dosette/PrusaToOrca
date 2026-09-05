@@ -46,7 +46,7 @@ checked in CI by [`tests/test_web_parity.py`](tests/test_web_parity.py).
 
 ### Windows
 
-Download `PrusaToOrca-v1.1.1-windows.zip` from the
+Download `PrusaToOrca-v1.1.2-windows.zip` from the
 [latest release](https://github.com/La-Dosette/PrusaToOrca/releases/latest), unzip it anywhere and run
 `PrusaToOrca.exe`. No installer or Python setup is required.
 
@@ -97,13 +97,13 @@ for the exact files and network requests used by each version.
 Check the archive against `SHA256SUMS.txt` from the release:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\PrusaToOrca-v1.1.1-windows.zip
+Get-FileHash -Algorithm SHA256 .\PrusaToOrca-v1.1.2-windows.zip
 ```
 
 Verify that GitHub Actions built it from this repository:
 
 ```bash
-gh attestation verify PrusaToOrca-v1.1.1-windows.zip --repo La-Dosette/PrusaToOrca
+gh attestation verify PrusaToOrca-v1.1.2-windows.zip --repo La-Dosette/PrusaToOrca
 ```
 
 ## Run from source
@@ -155,6 +155,19 @@ The script generates the version resource, runs PyInstaller with
 Do not enable PyInstaller one-file mode or UPX, and do not turn off `noarchive`.
 All three put an appended archive back into the executable, which is the
 packaging behaviour that caused the antivirus false positives.
+
+Published builds also compile PyInstaller's bootloader from source first:
+
+```powershell
+.\tools\build_bootloader.ps1
+```
+
+This needs a C compiler and is run automatically by the release workflow. The
+prebuilt bootloader that PyInstaller ships is shared by every PyInstaller
+application, malware included, so it sits in antivirus signature sets and the
+detection is inherited. Compiling it locally is what cleared the last Windows
+Defender false positive. A build made without this step still works; it is just
+more likely to be flagged.
 
 ## Tests
 

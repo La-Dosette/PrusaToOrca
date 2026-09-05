@@ -48,6 +48,10 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests -v
 
+      - name: Rebuild the PyInstaller bootloader
+        shell: pwsh
+        run: ./tools/build_bootloader.ps1
+
       - name: Build
         shell: pwsh
         run: .\build_exe.ps1

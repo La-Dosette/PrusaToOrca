@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.1.2
+
+Builds the PyInstaller bootloader from source, which is what finally cleared the
+Windows Defender false positive.
+
+v1.1.1 lowered the severity — `Trojan:Win32/Wacatac.C!ml` became
+`Program:Win32/Wacapew.A!ml` — but a signature update on 2026-09-05 brought the
+detection back, and Defender kept quarantining the download.
+
+The remaining trigger was not our code or our packaging: it was PyInstaller's
+prebuilt bootloader. Every PyInstaller application ships the same launcher
+binary, a great many malware samples are built with PyInstaller too, and that
+binary is consequently in antivirus signature and ML training sets. Applications
+inherit the detection regardless of what they contain.
+
+- `tools/build_bootloader.ps1` compiles the bootloader from the PyInstaller
+  source distribution and installs it over the prebuilt one. The CI and release
+  workflows run it before packaging, so published builds never ship the stock
+  launcher.
+
+Verified A/B against Windows Defender on the same signature version
+(1.459.59.0), minutes apart: the v1.1.1 binary reports
+`Program:Win32/Wacapew.A!ml`, a binary built with a self-compiled bootloader
+reports no threats, and the application starts normally.
+
+Conversion behaviour is unchanged.
+
 ## v1.1.1
 
 Windows Defender blocked v1.1.0 as `Trojan:Win32/Wacatac.C!ml` — at download,
