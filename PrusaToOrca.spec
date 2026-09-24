@@ -38,6 +38,27 @@ a = Analysis(
 
 pyz = PYZ(a.pure)
 
+# The project converter is a separate application with its own window, but it
+# ships in the same folder and shares one copy of the Python runtime and Tk.
+# Building it as its own release would mean a second build pipeline, a second
+# provenance attestation and a second round of antivirus false positives, for
+# an executable that runs the same conversion engine.
+projects = Analysis(
+    ['project_converter.py'],
+    pathex=[],
+    binaries=binaries,
+    datas=datas,
+    hiddenimports=hiddenimports,
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    noarchive=True,
+    optimize=0,
+)
+
+projects_pyz = PYZ(projects.pure)
+
 exe = EXE(
     pyz,
     a.scripts,
@@ -58,10 +79,33 @@ exe = EXE(
     version='version_info.txt',
 )
 
+projects_exe = EXE(
+    projects_pyz,
+    projects.scripts,
+    [],
+    exclude_binaries=True,
+    name='PrusaToOrca-Projects',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=False,
+    console=False,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    icon=['logo.ico'],
+    version='version_info.txt',
+)
+
 coll = COLLECT(
     exe,
+    projects_exe,
     a.binaries,
     a.datas,
+    projects.binaries,
+    projects.datas,
     strip=False,
     upx=False,
     upx_exclude=[],

@@ -63,6 +63,32 @@ The desktop application adds:
 - light and dark themes;
 - French, English, German, Spanish, Italian, Portuguese, Dutch and Polish.
 
+### Project converter
+
+The Windows package also contains `PrusaToOrca-Projects.exe`, a second
+application for `.3mf` project files.
+
+A `.3mf` carries the settings it was sliced with, so a project downloaded from
+Printables or MakerWorld already holds its author's profile. Drop one in and the
+converter reads which slicer wrote it and converts to the other one — in either
+direction. No config bundle export needed.
+
+It converts settings only, not geometry. Both directions run the same engine as
+the main application, so the results cannot differ.
+
+From the command line:
+
+```bash
+python to_orca.py project.3mf          # PrusaSlicer .3mf  -> .orca_printer
+python to_prusa.py project.3mf         # OrcaSlicer .3mf   -> .ini bundle
+```
+
+Converting OrcaSlicer to PrusaSlicer is not perfectly reversible. A few
+PrusaSlicer settings collapse onto a single OrcaSlicer setting, so the reverse
+cannot tell the sources apart; the conversion report names them rather than
+guessing. `tests/test_to_prusa.py` measures a full round trip and fails the
+build if a change makes it worse.
+
 ## Recommended workflow
 
 1. Back up your OrcaSlicer profiles.
@@ -183,13 +209,24 @@ behaviour and browser/desktop parity.
 
 ```text
 app.py                    Desktop interface
-convert.py                Conversion engine and command-line entry point
+project_converter.py      Project converter interface (.3mf, both directions)
+convert.py                Conversion engine, PrusaSlicer -> OrcaSlicer
+to_prusa.py               OrcaSlicer -> PrusaSlicer
+to_orca.py                PrusaSlicer project -> OrcaSlicer bundle
+threemf.py                Reads settings out of .3mf project files
 web/                      Browser interface
-tests/                    Unit and parity tests
+tests/                    Unit, round-trip and parity tests
 tools/                    Build helpers
-PrusaToOrca.spec          PyInstaller build recipe
+PrusaToOrca.spec          PyInstaller build recipe, builds both applications
 build_exe.ps1             Windows packaging script
 ```
+
+`to_prusa.py` does not carry its own copy of the mapping. It derives it from
+`convert.py` at import time by running the forward converters against a
+recording dictionary and reading the key pairs back out of the conversion log.
+A second hand-written table would be free to drift, and a converter that
+disagrees with itself depending on which direction you run it is worse than not
+having the reverse direction at all.
 
 ## Contributing
 
